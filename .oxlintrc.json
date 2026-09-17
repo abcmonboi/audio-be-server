@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "node": true,
+    "es2024": true
+  },
+  "plugins": ["typescript"],
+  "ignorePatterns": ["dist/**", "build/**", "coverage/**"],
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["./*", "../*"],
+            "message": "Use the @/ alias for imports from this project."
+          }
+        ]
+      }
+    ],
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-require-imports": "error"
+  }
+}
