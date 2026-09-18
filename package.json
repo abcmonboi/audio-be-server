@@ -7,7 +7,7 @@
   "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --import tsx --test tests/*.test.mjs",
     "dev": "tsx watch src/server.ts",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
@@ -18,7 +18,9 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.10.1"
+    "mongoose": "^9.10.1",
+    "slugify": "^1.6.9",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
