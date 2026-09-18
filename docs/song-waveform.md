@@ -8,10 +8,10 @@ FE nhận dữ liệu preview trong API bài hát và vẽ ngay, còn audio đư
 
 ```json
 {
-  "stream_url": "https://media.example.com/song.mp3",
-  "duration_ms": 241520,
-  "waveform_status": "ready",
-  "waveform_peaks": [0.08, 0.24, 0.71, 0.93, 0.42, 0.16]
+  "streamUrl": "https://media.example.com/song.mp3",
+  "durationMs": 241520,
+  "waveformStatus": "ready",
+  "waveformPeaks": [0.08, 0.24, 0.71, 0.93, 0.42, 0.16]
 }
 ```
 
@@ -21,7 +21,7 @@ Mỗi điểm là biên độ tuyệt đối lớn nhất trên mọi channel tr
 thời gian. Các khoảng có độ dài xấp xỉ bằng nhau và phủ hết bài hát.
 Giá trị nằm trong `0..1`; đây là dữ liệu để vẽ, không thể dùng để phát nhạc.
 
-`waveform_peaks` và `duration_ms` chưa có giá trị khi chưa phân tích audio.
+`waveformPeaks` và `durationMs` chưa có giá trị khi chưa phân tích audio.
 Mảng toàn số 0 là một waveform hợp lệ cho audio im lặng.
 
 ## Luồng xử lý đề xuất
@@ -37,7 +37,7 @@ flowchart LR
   G --> H[Audio element phát nhạc]
 ```
 
-Đặt `waveform_status` lần lượt là `pending`, `processing`, `ready`, hoặc
+Đặt `waveformStatus` lần lượt là `pending`, `processing`, `ready`, hoặc
 `failed` khi xử lý lỗi. Khi còn chờ, FE hiển thị placeholder; có thể lấy lại
 metadata hoặc nhận thông báo từ server khi hoàn tất.
 
@@ -80,12 +80,12 @@ Ví dụ lưu kết quả trong worker; `channels`, `sampleRate` đến từ dec
 ```ts
 import { Song } from "@/models/index";
 
-const waveform_peaks = createWaveformPeaks(channels);
-const duration_ms = Math.round((channels[0].length / sampleRate) * 1000);
+const waveformPeaks = createWaveformPeaks(channels);
+const durationMs = Math.round((channels[0].length / sampleRate) * 1000);
 
 await Song.updateOne(
   { _id: songId },
-  { $set: { waveform_peaks, duration_ms, waveform_status: "ready" } },
+  { $set: { waveformPeaks, durationMs, waveformStatus: "ready" } },
   { runValidators: true },
 );
 ```
@@ -97,7 +97,7 @@ kết quả để job cũ không ghi đè dữ liệu của file mới.
 Mẫu PCM trên giữ file đã giải mã trong RAM. Với file dài, worker thực tế nên
 dùng công cụ xử lý theo luồng như BBC audiowaveform/FFmpeg. JSON của
 audiowaveform chứa các cặp min/max và metadata, cần chuyển đổi trước khi
-gán vào `waveform_peaks`; không lưu nguyên JSON đó vào mảng này.
+gán vào `waveformPeaks`; không lưu nguyên JSON đó vào mảng này.
 
 ## Mẫu canvas trên frontend
 
@@ -145,11 +145,11 @@ Ví dụ sử dụng sau khi nhận `song` từ API và có các element trong D
 ```js
 const canvas = document.getElementById("waveform");
 const audio = document.getElementById("player");
-audio.src = song.stream_url;
+audio.src = song.streamUrl;
 
 const redraw = () => {
-  if (song.waveform_status !== "ready" || !song.duration_ms) return;
-  drawWaveform(canvas, song.waveform_peaks, (audio.currentTime * 1000) / song.duration_ms);
+  if (song.waveformStatus !== "ready" || !song.durationMs) return;
+  drawWaveform(canvas, song.waveformPeaks, (audio.currentTime * 1000) / song.durationMs);
 };
 
 redraw(); // Vẽ được trước khi tải/phát audio.
@@ -166,15 +166,15 @@ phát. Peaks chỉ mô tả waveform toàn bài; visualizer nhảy theo tần s�
 ## Phạm vi lưu trữ và validation
 
 - Preview nhỏ: lưu ngay trong document để API chi tiết trả một lần là đủ vẽ.
-  API danh sách không cần waveform có thể dùng `.select("-waveform_peaks")`.
+  API danh sách không cần waveform có thể dùng `.select("-waveformPeaks")`.
 - Zoom sâu hoặc nhiều mức chi tiết: lưu waveform ở object storage/CDN và giữ
   URL/key trong document, đồng thời vẫn có thể giữ preview nhỏ trong DB.
 - `currency` là chuỗi như `VND`, `USD`; regex trong schema chỉ kiểm tra dạng
   ba chữ cái. Service cần kiểm tra tiền tệ được hỗ trợ và yêu cầu currency
-  khi có `price_minor`. Giá chưa xác định khác với giá `0`.
-- `rating_sum / rating_count` cho điểm trung bình; khi count bằng 0 thì trả
+  khi có `priceMinor`. Giá chưa xác định khác với giá `0`.
+- `ratingSum / ratingCount` cho điểm trung bình; khi count bằng 0 thì trả
   `null`. Service cần cập nhật cả hai nhất quán theo thang điểm đã chọn.
-- `publication_status` mặc định `draft`; `published_at` do luồng xuất bản
+- `publicationStatus` mặc định `draft`; `publishedAt` do luồng xuất bản
   đặt sau khi kiểm tra metadata và audio đã sẵn sàng. Schema không tự xuất bản.
 - Service chỉ chuyển waveform sang `ready` sau khi có cả peaks và duration.
   Đó là điều kiện nghiệp vụ; enum trong schema chỉ giới hạn tên trạng thái.

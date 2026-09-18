@@ -6,6 +6,13 @@
   },
   "plugins": ["typescript"],
   "ignorePatterns": ["dist/**", "build/**", "coverage/**"],
+  "jsPlugins": [{ "name": "models", "specifier": "./lint/model-fields.js" }],
+  "overrides": [
+    {
+      "files": ["src/models/**/*.{js,ts,mjs,mts,cjs,cts,jsx,tsx}"],
+      "rules": { "models/camel-case-keys": "error" }
+    }
+  ],
   "rules": {
     "no-undef": "off",
     "no-unused-vars": [

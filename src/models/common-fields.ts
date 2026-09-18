@@ -17,3 +17,7 @@ export const commonFields = {
 } as const;
 
 export type CommonFields = InferRawDocType<typeof commonFields>;
+
+export const commonOptions = {
+  timestamps: true,
+} as const;

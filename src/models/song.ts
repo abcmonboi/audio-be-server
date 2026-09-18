@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { commonFields } from "@/models/common-fields";
+import { commonFields, commonOptions } from "@/models/common-fields";
 
 const nonNegativeInteger = {
   type: Number,
@@ -13,14 +13,14 @@ const songSchema = new mongoose.Schema(
   {
     ...commonFields,
     isrc: { type: String, trim: true, uppercase: true },
-    stream_url: String,
-    thumbnail_url: String,
-    cover_image_url: String,
-    music_video_url: String,
+    streamUrl: String,
+    thumbnailUrl: String,
+    coverImageUrl: String,
+    musicVideoUrl: String,
 
     // Preview: evenly spaced windows across the entire recording, one
     // maximum absolute amplitude (0..1, all channels) per window.
-    waveform_peaks: {
+    waveformPeaks: {
       type: [{ type: Number, min: 0, max: 1 }],
       default: undefined,
       validate: {
@@ -32,14 +32,14 @@ const songSchema = new mongoose.Schema(
         message: "Waveform preview must contain 1 to 2048 finite peaks.",
       },
     },
-    waveform_status: {
+    waveformStatus: {
       type: String,
       enum: ["pending", "processing", "ready", "failed"],
       default: "pending",
     },
 
     hashtags: [{ type: String, trim: true, lowercase: true }],
-    price_minor: nonNegativeInteger,
+    priceMinor: nonNegativeInteger,
     currency: { type: String, trim: true, uppercase: true, match: /^[A-Z]{3}$/ },
     bpm: {
       type: Number,
@@ -49,22 +49,22 @@ const songSchema = new mongoose.Schema(
       },
     },
     // Leave unset until audio metadata has been extracted.
-    duration_ms: { ...nonNegativeInteger, min: 1 },
-    like_count: counter,
-    play_count: counter,
-    rating_count: counter,
-    rating_sum: { type: Number, min: 0, default: 0, validate: Number.isFinite },
-    view_count: counter,
-    download_count: counter,
+    durationMs: { ...nonNegativeInteger, min: 1 },
+    likeCount: counter,
+    playCount: counter,
+    ratingCount: counter,
+    ratingSum: { type: Number, min: 0, default: 0, validate: Number.isFinite },
+    viewCount: counter,
+    downloadCount: counter,
 
-    publication_status: {
+    publicationStatus: {
       type: String,
       enum: ["draft", "published", "archived"],
       default: "draft",
     },
-    published_at: Date,
+    publishedAt: Date,
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } },
+  { ...commonOptions },
 );
 
 export default mongoose.model("Song", songSchema);
