@@ -1,4 +1,4 @@
-import { Genre } from "@/models/index";
+import { License } from "@/models/index";
 import { createSlug } from "@/utils/slug";
 import { sendCreated, sendPaginatedList } from "@/utils/response";
 import { fetchPaginatedList } from "@/utils/list-query";
@@ -7,23 +7,22 @@ import type { CommonInput } from "@/validators/common";
 import type { ValidatedBodyHandler } from "@/middlewares/validate-body";
 
 // Route phải gắn validateBody(commonSchema) trước controller này.
-const createGenre: ValidatedBodyHandler<CommonInput> = async (_req, res) => {
+const createLicense: ValidatedBodyHandler<CommonInput> = async (_req, res) => {
   const { title, description } = res.locals.body;
 
-  // Chỉ ghi các trường cần thiết; model kiểm tra các ràng buộc của schema.
-  const newGenre = await Genre.create({
+  const newLicense = await License.create({
     title,
     slug: createSlug(title),
     description,
   });
 
-  return sendCreated(res, newGenre);
+  return sendCreated(res, newLicense);
 };
 
-const getGenreList: RequestHandler = async (req, res) => {
-  const { data, total, page, pageSize } = await fetchPaginatedList(Genre, req.query);
+const getLicenseList: RequestHandler = async (req, res) => {
+  const { data, total, page, pageSize } = await fetchPaginatedList(License, req.query);
 
   return sendPaginatedList(res, data, { page, pageSize, total });
 };
 
-export { createGenre, getGenreList };
+export { createLicense, getLicenseList };

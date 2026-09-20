@@ -9,3 +9,5 @@ export const commonSchema = z.object({
     .min(1, "title không được để trống"),
   description: z.string({ error: "description phải là chuỗi" }).optional(),
 });
+
+export type CommonInput = z.output<typeof commonSchema>;
