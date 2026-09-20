@@ -2,7 +2,6 @@ import express from "express";
 import "dotenv/config";
 import { connectDB } from "@/config/db-connect";
 import { initRoutes } from "@/routes/index";
-import { Genre } from "@/models/index";
 import { errorHandler } from "@/middlewares/error-handler";
 
 const app = express();
@@ -18,9 +17,6 @@ app.get("/", (_req, res) => {
 
 const bootstrap = async () => {
   await connectDB();
-  // Với cấu hình tự tạo index hiện tại, chờ unique index của slug sẵn sàng
-  // trước khi nhận request để MongoDB chặn các genre trùng slug ngay từ đầu.
-  await Genre.init();
   initRoutes(app);
   // Đặt sau tất cả routes để xử lý lỗi chung; Express 5 tự chuyển lỗi từ async controller tới đây.
   app.use(errorHandler);
