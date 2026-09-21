@@ -1,4 +1,9 @@
-import { createVideoTheme, getVideoTheme, getVideoThemeList } from "@/controllers/video-theme";
+import {
+  createVideoTheme,
+  editVideoTheme,
+  getVideoTheme,
+  getVideoThemeList,
+} from "@/controllers/video-theme";
 import { validateObjectId } from "@/middlewares/validate-object-id";
 import { validatePagination } from "@/middlewares/validate-pagination";
 import { Router } from "express";
@@ -10,5 +15,6 @@ const router = Router();
 router.post("/", validateBody(commonSchema), createVideoTheme);
 router.get("/", validatePagination, getVideoThemeList);
 router.get("/:id", validateObjectId, getVideoTheme);
+router.put("/:id", validateObjectId, validateBody(commonSchema), editVideoTheme);
 
 export default router;

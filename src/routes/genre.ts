@@ -1,4 +1,4 @@
-import { createGenre, getGenre, getGenreList } from "@/controllers/genre";
+import { createGenre, editGenre, getGenre, getGenreList } from "@/controllers/genre";
 import { validatePagination } from "@/middlewares/validate-pagination";
 import { Router } from "express";
 import { validateBody } from "@/middlewares/validate-body";
@@ -12,5 +12,7 @@ router.post("/", validateBody(commonSchema), createGenre);
 router.get("/", validatePagination, getGenreList);
 
 router.get("/:id", validateObjectId, getGenre);
+
+router.put("/:id", validateObjectId, validateBody(commonSchema), editGenre);
 
 export default router;

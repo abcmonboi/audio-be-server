@@ -2,6 +2,7 @@ import { Genre } from "@/models/index";
 import { createSlug } from "@/utils/slug";
 import { sendCreated, sendSuccess } from "@/utils/response";
 import { getById } from "@/utils/get-by-id";
+import { updateById } from "@/utils/update-by-id";
 import { fetchPaginatedList } from "@/utils/list-query";
 import type { RequestHandler } from "express";
 import type { CommonInput } from "@/validators/common";
@@ -24,9 +25,20 @@ const createGenre: ValidatedBodyHandler<CommonInput> = async (_req, res) => {
 const getGenreList: RequestHandler = async (req, res) => {
   const { data, total, page, pageSize } = await fetchPaginatedList(Genre, req.query);
 
-  return sendSuccess(res, data, { page, pageSize, total });
+  return sendSuccess(res, data, { pagination: { page, pageSize, total } });
 };
 
 const getGenre: RequestHandler = async (req, res) => getById(req.params, Genre, res);
 
-export { createGenre, getGenreList, getGenre };
+const editGenre: ValidatedBodyHandler<CommonInput> = async (req, res) => {
+  const { title, description } = res.locals.body;
+  const payload = {
+    title,
+    description,
+    slug: createSlug(title),
+  };
+
+  return updateById(req.params, payload, Genre, res);
+};
+
+export { createGenre, getGenreList, getGenre, editGenre };
