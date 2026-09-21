@@ -3,6 +3,7 @@ import { createSlug } from "@/utils/slug";
 import { sendCreated, sendSuccess } from "@/utils/response";
 import { fetchPaginatedList } from "@/utils/list-query";
 import { getById } from "@/utils/get-by-id";
+import { deleteById } from "@/utils/delete-by-id";
 import { updateById } from "@/utils/update-by-id";
 import type { RequestHandler } from "express";
 import type { CommonInput } from "@/validators/common";
@@ -42,4 +43,7 @@ const editVideoTheme: ValidatedBodyHandler<CommonInput> = async (req, res) => {
   return updateById(req.params, payload, VideoTheme, res);
 };
 
-export { createVideoTheme, getVideoThemeList, getVideoTheme, editVideoTheme };
+const deleteVideoTheme: RequestHandler = async (req, res) =>
+  deleteById(req.params, VideoTheme, res);
+
+export { createVideoTheme, getVideoThemeList, getVideoTheme, editVideoTheme, deleteVideoTheme };

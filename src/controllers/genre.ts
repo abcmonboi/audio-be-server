@@ -2,6 +2,7 @@ import { Genre } from "@/models/index";
 import { createSlug } from "@/utils/slug";
 import { sendCreated, sendSuccess } from "@/utils/response";
 import { getById } from "@/utils/get-by-id";
+import { deleteById } from "@/utils/delete-by-id";
 import { updateById } from "@/utils/update-by-id";
 import { fetchPaginatedList } from "@/utils/list-query";
 import type { RequestHandler } from "express";
@@ -41,4 +42,6 @@ const editGenre: ValidatedBodyHandler<CommonInput> = async (req, res) => {
   return updateById(req.params, payload, Genre, res);
 };
 
-export { createGenre, getGenreList, getGenre, editGenre };
+const deleteGenre: RequestHandler = async (req, res) => deleteById(req.params, Genre, res);
+
+export { createGenre, getGenreList, getGenre, editGenre, deleteGenre };

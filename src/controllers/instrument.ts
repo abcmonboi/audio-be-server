@@ -3,6 +3,7 @@ import { createSlug } from "@/utils/slug";
 import { sendCreated, sendSuccess } from "@/utils/response";
 import { fetchPaginatedList } from "@/utils/list-query";
 import { getById } from "@/utils/get-by-id";
+import { deleteById } from "@/utils/delete-by-id";
 import { updateById } from "@/utils/update-by-id";
 import type { RequestHandler } from "express";
 import type { CommonInput } from "@/validators/common";
@@ -42,4 +43,7 @@ const editInstrument: ValidatedBodyHandler<CommonInput> = async (req, res) => {
   return updateById(req.params, payload, Instrument, res);
 };
 
-export { createInstrument, getInstrumentList, getInstrument, editInstrument };
+const deleteInstrument: RequestHandler = async (req, res) =>
+  deleteById(req.params, Instrument, res);
+
+export { createInstrument, getInstrumentList, getInstrument, editInstrument, deleteInstrument };
