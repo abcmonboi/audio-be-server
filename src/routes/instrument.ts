@@ -1,4 +1,5 @@
-import { createInstrument, getInstrumentList } from "@/controllers/instrument";
+import { createInstrument, getInstrument, getInstrumentList } from "@/controllers/instrument";
+import { validateObjectId } from "@/middlewares/validate-object-id";
 import { validatePagination } from "@/middlewares/validate-pagination";
 import { Router } from "express";
 import { validateBody } from "@/middlewares/validate-body";
@@ -8,5 +9,6 @@ const router = Router();
 
 router.post("/", validateBody(commonSchema), createInstrument);
 router.get("/", validatePagination, getInstrumentList);
+router.get("/:id", validateObjectId, getInstrument);
 
 export default router;
