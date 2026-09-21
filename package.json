@@ -5,10 +5,10 @@
   "license": "ISC",
   "author": "ab",
   "type": "module",
-  "main": "src/server.ts",
+  "main": "server.ts",
   "scripts": {
     "test": "node --import tsx --test tests/*.test.mjs",
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch server.ts",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "oxlint .",
