@@ -3,6 +3,8 @@ import "dotenv/config";
 import { connectDB } from "@/config/db-connect";
 import { initRoutes } from "@/routes/index";
 import { errorHandler } from "@/middlewares/error-handler";
+// import { getEmailConfig } from "@/config/email";
+// import { initializeRegistration } from "@/config/registration";
 
 const app = express();
 const port = process.env.BACKEND_SERVER_PORT ?? 1346;
@@ -16,7 +18,9 @@ app.get("/", (_req, res) => {
 });
 
 const bootstrap = async () => {
+  // getEmailConfig();
   await connectDB();
+  // await initializeRegistration();
   initRoutes(app);
   // Đặt sau tất cả routes để xử lý lỗi chung; Express 5 tự chuyển lỗi từ async controller tới đây.
   app.use(errorHandler);
@@ -26,7 +30,7 @@ const bootstrap = async () => {
   });
 };
 
-bootstrap().catch((error) => {
-  console.error("Failed to start server:", error);
+bootstrap().catch(() => {
+  console.error("Failed to start server; check configuration and database");
   process.exit(1);
 });

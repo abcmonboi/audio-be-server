@@ -17,7 +17,6 @@ export async function connectDB() {
     }
   } catch (error) {
     console.log("DB connection failed");
-    console.log(error);
     throw new Error("DB connection failed", { cause: error });
   }
 }

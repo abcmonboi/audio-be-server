@@ -4,6 +4,7 @@ import videoThemeRouter from "@/routes/video-theme";
 import licenseRouter from "@/routes/license";
 import instrumentRouter from "@/routes/instrument";
 import moodRouter from "@/routes/mood";
+import userRouter from "@/routes/user";
 
 export const initRoutes = (app: Express) => {
   // Gắn các route tài nguyên vào tiền tố chung /api.
@@ -14,6 +15,7 @@ export const initRoutes = (app: Express) => {
   apiRouter.use("/license", licenseRouter);
   apiRouter.use("/instrument", instrumentRouter);
   apiRouter.use("/mood", moodRouter);
+  apiRouter.use("/user", userRouter);
 
   // Gom tiền tố API tại một nơi.
   app.use("/api", apiRouter);
